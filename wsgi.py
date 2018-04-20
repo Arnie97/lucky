@@ -6,7 +6,7 @@ from bottle import route, app, abort, HTTPResponse
 URL = 'https://www.google.com.hk/search'
 
 
-@route('/<keyword>')
+@route('/<keyword:path>')
 def feeling_lucky(keyword):
     params = {'q': keyword, 'hl': 'zh-CN', 'btnI': ''}
     r = requests.get(URL, params, allow_redirects=False)
