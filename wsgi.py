@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 import requests
-from bottle import route, app, abort, HTTPResponse
+from bottle import route, app, abort, redirect
+from urllib.parse import urlparse, parse_qs
 
 URL = 'https://www.google.com.hk/search'
 
@@ -10,8 +11,10 @@ URL = 'https://www.google.com.hk/search'
 def feeling_lucky(keyword):
     params = {'q': keyword, 'hl': 'zh-CN', 'btnI': ''}
     r = requests.get(URL, params, allow_redirects=False)
-    if r.status_code == 302:
-        return HTTPResponse(r.content, r.status_code, r.headers.items())
+    if r.is_redirect:
+        query = urlparse(r.headers['Location'])[4]
+        target_url = parse_qs(query).get('q', [''])[0]
+        redirect(target_url)
     else:
         abort(404, 'Not understood.')
 
