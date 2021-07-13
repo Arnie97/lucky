@@ -7,6 +7,16 @@ from urllib.parse import urlparse, parse_qs
 URL = 'https://www.google.com.hk/search'
 
 
+@route('/robots.txt')
+def robots():
+    return 'User-Agent: *\nDisallow: /\n'
+
+
+@route(r'/<:re:favicon\.ico|.+\.php(/.*)?>')
+def block():
+    abort(403, "Demonstrate you're not a robot.")
+
+
 @route('/<keyword:path>')
 def feeling_lucky(keyword):
     params = {'q': keyword, 'hl': 'zh-CN', 'btnI': ''}
